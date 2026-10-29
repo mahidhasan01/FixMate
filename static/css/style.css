@@ -1,0 +1,26 @@
+:root {
+    --brand: #7e22ce;
+}
+
+body {
+    background-color: #f6f7fb;
+}
+
+.site-navbar {
+    background-color: var(--brand);
+}
+
+.hero {
+    padding: 4rem 1rem;
+}
+
+.hero-icon {
+    font-size: 4rem;
+    color: var(--brand);
+}
+
+.site-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e3e3e3;
+    color: #6c757d;
+}
