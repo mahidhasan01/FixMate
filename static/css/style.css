@@ -1,13 +1,64 @@
+/* FixMate colours */
 :root {
-    --brand: #7e22ce;
+    --fm-green: #006a4e;
+    --fm-green-dark: #00523c;
+    --fm-yellow: #f2b705;
+    --fm-ink: #18211c;
+    --fm-paper: #f5f7f5;
+    --fm-blue: #2c6db5;
+    --fm-red: #c0392b;
+
+    /* Bootstrap reads these, so badges, text and background classes use our colours */
+    --bs-primary: var(--fm-green);
+    --bs-primary-rgb: 0, 106, 78;
+    --bs-success: var(--fm-green);
+    --bs-success-rgb: 0, 106, 78;
+    --bs-warning: var(--fm-yellow);
+    --bs-warning-rgb: 242, 183, 5;
+    --bs-info: var(--fm-blue);
+    --bs-info-rgb: 44, 109, 181;
+    --bs-danger: var(--fm-red);
+    --bs-danger-rgb: 192, 57, 43;
+
+    --bs-body-color: var(--fm-ink);
+    --bs-body-bg: var(--fm-paper);
+    --bs-body-font-family: 'Hind Siliguri', sans-serif;
+    --bs-link-color: var(--fm-blue);
+    --bs-link-color-rgb: 44, 109, 181;
 }
 
-body {
-    background-color: #f6f7fb;
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Anek Bangla', sans-serif;
+}
+
+/* Bootstrap buttons have their colours built in, so we set them here */
+.btn-primary {
+    --bs-btn-bg: var(--fm-green);
+    --bs-btn-border-color: var(--fm-green);
+    --bs-btn-hover-bg: var(--fm-green-dark);
+    --bs-btn-hover-border-color: var(--fm-green-dark);
+    --bs-btn-active-bg: var(--fm-green-dark);
+    --bs-btn-active-border-color: var(--fm-green-dark);
+}
+
+/* Main call-to-action button: yellow with dark text */
+.btn-warning {
+    --bs-btn-color: var(--fm-ink);
+    --bs-btn-bg: var(--fm-yellow);
+    --bs-btn-border-color: var(--fm-yellow);
+    --bs-btn-hover-color: var(--fm-ink);
+    --bs-btn-hover-bg: #d9a404;
+    --bs-btn-hover-border-color: #d9a404;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--fm-green);
+    box-shadow: 0 0 0 0.25rem rgba(0, 106, 78, 0.25);
 }
 
 .site-navbar {
-    background-color: var(--brand);
+    background-color: var(--fm-green);
 }
 
 .hero {
@@ -16,11 +67,10 @@ body {
 
 .hero-icon {
     font-size: 4rem;
-    color: var(--brand);
+    color: var(--fm-green);
 }
 
 .site-footer {
-    background-color: #ffffff;
-    border-top: 1px solid #e3e3e3;
-    color: #6c757d;
+    background-color: var(--fm-ink);
+    color: #d6ddd8;
 }
