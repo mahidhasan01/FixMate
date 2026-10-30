@@ -136,7 +136,7 @@ PRIVATE_MEDIA_ROOT = BASE_DIR / 'private_media'
 
 
 LOGIN_URL = 'accounts_app:login'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'accounts_app:after_login'
 LOGOUT_REDIRECT_URL = 'home'
 
 MESSAGE_TAGS = {messages.ERROR: 'danger'}

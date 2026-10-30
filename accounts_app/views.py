@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from .forms import CustomerSignUpForm, WorkerSignUpForm
@@ -9,6 +10,14 @@ def choose_role(request):
     if request.user.is_authenticated:
         return redirect('home')
     return render(request, 'accounts_app/choose_role.html')
+
+
+@login_required
+def after_login(request):
+    messages.success(request, f'Welcome back, {request.user.username}!')
+    if request.user.is_staff:
+        return redirect('admin:index')
+    return redirect('home')
 
 
 def customer_signup(request):
