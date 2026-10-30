@@ -49,6 +49,8 @@
                     <a href="{% url 'accounts_app:profile_edit' %}" class="btn btn-primary">Edit profile</a>
                     {% if user.role == 'customer' %}
                         <a href="{% url 'accounts_app:id_verification' %}" class="btn btn-outline-primary">Verify your ID</a>
+                    {% elif not role_profile.verified_badge %}
+                        <a href="{% url 'accounts_app:worker_verification' %}" class="btn btn-outline-primary">Get verified</a>
                     {% endif %}
                 </div>
             </div>
