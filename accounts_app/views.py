@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import ( CustomerIDForm, CustomerProfileForm, CustomerSignUpForm, UserUpdateForm, WorkerProfileForm,WorkerSignUpForm, WorkerVerificationForm)
 from .models import CustomerProfile, User, WorkerVerification
@@ -146,3 +146,56 @@ def worker_verification(request):
 
     context = {'worker': worker, 'attempts': attempts, 'form': form, 'can_submit': can_submit}
     return render(request, 'accounts_app/worker_verification.html', context)
+
+
+@login_required
+def verification_queue(request):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    customers = CustomerProfile.objects.filter(verification_status=CustomerProfile.PENDING)
+    worker_attempts = WorkerVerification.objects.filter(
+        verification_status=WorkerVerification.PENDING
+    ).order_by('submitted_date')
+
+    context = {'customers': customers, 'worker_attempts': worker_attempts}
+    return render(request, 'accounts_app/verification_queue.html', context)
+
+
+@login_required
+def review_customer_id(request, pk):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        customer = get_object_or_404(CustomerProfile, pk=pk)
+        if request.POST.get('action') == 'approve':
+            customer.verification_status = CustomerProfile.APPROVED
+            messages.success(request, f'{customer.user.username} ID approved.')
+        else:
+            customer.verification_status = CustomerProfile.REJECTED
+            messages.success(request, f'{customer.user.username} ID rejected.')
+        customer.save()
+
+    return redirect('accounts_app:verification_queue')
+
+
+@login_required
+def review_worker_verification(request, pk):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        verification = get_object_or_404(WorkerVerification, pk=pk)
+        username = verification.worker.user.username
+        if request.POST.get('action') == 'approve':
+            verification.approve_verification()
+            messages.success(request, f'{username} is now verified.')
+        else:
+            verification.reject_verification(request.POST.get('comment', ''))
+            messages.success(request, f'{username} document rejected.')
+
+    return redirect('accounts_app:verification_queue')

@@ -21,4 +21,8 @@ urlpatterns = [
     path('profile/edit/', views.profile_edit, name='profile_edit'),
     path('profile/id_verification/', views.id_verification, name='id_verification'),
     path('profile/worker_verification/', views.worker_verification, name='worker_verification'),
+    path('staff/verification_queue/', views.verification_queue, name='verification_queue'),
+    path('staff/customer_id/<int:pk>/review/', views.review_customer_id, name='review_customer_id'),
+    path('staff/worker_verification/<int:pk>/review/', views.review_worker_verification,
+         name='review_worker_verification'),
 ]

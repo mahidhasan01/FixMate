@@ -25,6 +25,7 @@
                                 <li><a class="dropdown-item" href="{% url 'accounts_app:profile' %}">My profile</a></li>
                             {% endif %}
                             {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="{% url 'accounts_app:verification_queue' %}">Verification queue</a></li>
                                 <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin panel</a></li>
                                 <li><hr class="dropdown-divider"></li>
                             {% endif %}
