@@ -21,7 +21,10 @@
                         {% for customer in customers %}
                             <tr>
                                 <td>{{ customer.user.get_full_name|default:customer.user.username }}</td>
-                                <td>{{ customer.nid_number }}</td>
+                                <td>
+                                    {{ customer.nid_number }}
+                                    <a href="{% url 'accounts_app:customer_id_photo' customer.pk %}" target="_blank" class="ms-2">View photo</a>
+                                </td>
                                 <td>
                                     <form method="post" action="{% url 'accounts_app:review_customer_id' customer.pk %}" class="d-flex gap-2">
                                         {% csrf_token %}
@@ -57,7 +60,10 @@
                             <tr>
                                 <td>{{ attempt.worker.user.get_full_name|default:attempt.worker.user.username }}</td>
                                 <td>{{ attempt.worker.skill }}</td>
-                                <td>{{ attempt.submitted_date|date:'d M Y' }}</td>
+                                <td>
+                                    {{ attempt.submitted_date|date:'d M Y' }}
+                                    <a href="{% url 'accounts_app:worker_document' attempt.pk %}" target="_blank" class="ms-2">View photo</a>
+                                </td>
                                 <td>
                                     <form method="post" action="{% url 'accounts_app:review_worker_verification' attempt.pk %}" class="d-flex gap-2">
                                         {% csrf_token %}

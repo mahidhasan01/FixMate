@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import ( CustomerIDForm, CustomerProfileForm, CustomerSignUpForm, UserUpdateForm, WorkerProfileForm,WorkerSignUpForm, WorkerVerificationForm)
@@ -199,3 +200,23 @@ def review_worker_verification(request, pk):
             messages.success(request, f'{username} document rejected.')
 
     return redirect('accounts_app:verification_queue')
+
+
+@login_required
+def customer_id_photo(request, pk):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    customer = get_object_or_404(CustomerProfile, pk=pk)
+    return FileResponse(customer.id_photo.open('rb'))
+
+
+@login_required
+def worker_document(request, pk):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    verification = get_object_or_404(WorkerVerification, pk=pk)
+    return FileResponse(verification.document_photo.open('rb'))

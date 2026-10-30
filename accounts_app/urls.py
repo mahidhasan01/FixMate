@@ -25,4 +25,6 @@ urlpatterns = [
     path('staff/customer_id/<int:pk>/review/', views.review_customer_id, name='review_customer_id'),
     path('staff/worker_verification/<int:pk>/review/', views.review_worker_verification,
          name='review_worker_verification'),
+    path('private/customer_id/<int:pk>/', views.customer_id_photo, name='customer_id_photo'),
+    path('private/worker_document/<int:pk>/', views.worker_document, name='worker_document'),
 ]
