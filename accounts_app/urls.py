@@ -17,4 +17,6 @@ urlpatterns = [
     ), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('after-login/', views.after_login, name='after_login'),
+    path('profile/', views.profile, name='profile'),
+    path('profile/edit/', views.profile_edit, name='profile_edit'),
 ]

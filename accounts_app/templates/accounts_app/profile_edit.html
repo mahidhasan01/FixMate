@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit profile - FixMate{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-4">Edit profile</h1>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% include 'partials/_form_fields.html' with form=user_form %}
+                        {% include 'partials/_form_fields.html' with form=profile_form %}
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <a href="{% url 'accounts_app:profile' %}" class="btn btn-outline-primary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

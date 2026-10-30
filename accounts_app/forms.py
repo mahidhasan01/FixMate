@@ -64,3 +64,47 @@ class WorkerSignUpForm(SignUpForm):
                 experience=self.cleaned_data['experience'],
             )
         return user
+
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+    phone = forms.CharField(max_length=20)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'phone']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        others = User.objects.exclude(pk=self.instance.pk)
+        if others.filter(email__iexact=email).exists():
+            raise forms.ValidationError('An account with this email already exists.')
+        return email
+
+
+class CustomerProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomerProfile
+        fields = ['address']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class WorkerProfileForm(forms.ModelForm):
+    class Meta:
+        model = WorkerProfile
+        fields = ['skill', 'experience', 'profile_photo', 'availability_status']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+        self.fields['availability_status'].widget.attrs['class'] = 'form-select'

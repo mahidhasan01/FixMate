@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}My profile - FixMate{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        {% if user.role == 'worker' and role_profile.profile_photo %}
+                            <img src="{{ role_profile.profile_photo.url }}" alt="Profile photo of {{ user.username }}"
+                                 class="rounded-circle profile-photo">
+                        {% else %}
+                            <i class="bi bi-person-circle role-icon"></i>
+                        {% endif %}
+                        <div>
+                            <h1 class="h3 mb-1">{{ user.get_full_name|default:user.username }}</h1>
+                            <span class="text-body-secondary">@{{ user.username }} &middot; {{ user.get_role_display }}</span>
+                            {% if user.role == 'worker' and role_profile.verified_badge %}
+                                <span class="badge badge-verified ms-1"><i class="bi bi-shield-check"></i> Verified</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">{{ user.email|default:'-' }}</dd>
+                        <dt class="col-sm-4">Phone</dt>
+                        <dd class="col-sm-8">{{ user.phone|default:'-' }}</dd>
+
+                        {% if user.role == 'customer' %}
+                            <dt class="col-sm-4">Address</dt>
+                            <dd class="col-sm-8">{{ role_profile.address|default:'-' }}</dd>
+                        {% else %}
+                            <dt class="col-sm-4">Skill</dt>
+                            <dd class="col-sm-8">{{ role_profile.skill }}</dd>
+                            <dt class="col-sm-4">Experience</dt>
+                            <dd class="col-sm-8">{{ role_profile.experience }} years</dd>
+                            <dt class="col-sm-4">Availability</dt>
+                            <dd class="col-sm-8">{{ role_profile.get_availability_status_display }}</dd>
+                            <dt class="col-sm-4">Rating</dt>
+                            <dd class="col-sm-8">{{ role_profile.average_rating }} <i class="bi bi-star-fill text-warning"></i></dd>
+                        {% endif %}
+                    </dl>
+
+                    <a href="{% url 'accounts_app:profile_edit' %}" class="btn btn-primary">Edit profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
