@@ -19,7 +19,6 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Read SECRET_KEY and DEBUG from the .env file next to manage.py
 load_dotenv(BASE_DIR / '.env')
 
 
@@ -29,7 +28,6 @@ load_dotenv(BASE_DIR / '.env')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
 
-# .env values are text, so compare with the string 'True'
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
@@ -90,7 +88,6 @@ DATABASES = {
     }
 }
 
-# Use our own User model (accounts_app/models.py). Must be set before the first migrate.
 AUTH_USER_MODEL = 'accounts_app.User'
 
 
@@ -130,24 +127,18 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # collectstatic copies files here for deployment
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Public uploads: profile photos, listing images, completion photos
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# NID photos and worker documents. No URL on purpose: they are only
-# served through a view that checks the owner or staff.
 PRIVATE_MEDIA_ROOT = BASE_DIR / 'private_media'
 
-
-# Login and logout
 
 LOGIN_URL = 'accounts_app:login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-# Bootstrap's red alert class is "danger", Django calls the level "error"
 MESSAGE_TAGS = {messages.ERROR: 'danger'}
 
 

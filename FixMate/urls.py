@@ -14,6 +14,5 @@ urlpatterns = [
     path('payments/', include('payment_app.urls')),
 ]
 
-# Let the dev server show uploaded photos. PythonAnywhere serves them itself.
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

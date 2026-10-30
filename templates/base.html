@@ -12,10 +12,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700&family=Hind+Siliguri:wght@400;600&display=swap">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { prefix: 'tw-', corePlugins: { preflight: false } };
+    </script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
     {% include 'partials/_navbar.html' %}
+
+    {% block hero %}{% endblock %}
 
     <main class="container flex-grow-1 py-4">
         {% include 'partials/_messages.html' %}

@@ -1,37 +1,41 @@
-/* FixMate colours */
 :root {
     --fm-green: #006a4e;
-    --fm-green-dark: #00523c;
+    --fm-green-dark: #004d38;
+    --fm-green-tint: #e6f2ee;
     --fm-yellow: #f2b705;
+    --fm-yellow-hover: #d9a404;
     --fm-ink: #18211c;
+    --fm-muted: #5b6763;
     --fm-paper: #f5f7f5;
+    --fm-border: #d9e2de;
+    --fm-footer: #10201b;
+    --fm-footer-text: #d5ded9;
     --fm-blue: #2c6db5;
     --fm-red: #c0392b;
 
-    /* Bootstrap reads these, so badges, text and background classes use our colours */
     --bs-primary: var(--fm-green);
     --bs-primary-rgb: 0, 106, 78;
-    --bs-success: var(--fm-green);
-    --bs-success-rgb: 0, 106, 78;
-    --bs-warning: var(--fm-yellow);
-    --bs-warning-rgb: 242, 183, 5;
-    --bs-info: var(--fm-blue);
-    --bs-info-rgb: 44, 109, 181;
     --bs-danger: var(--fm-red);
     --bs-danger-rgb: 192, 57, 43;
 
     --bs-body-color: var(--fm-ink);
-    --bs-body-bg: var(--fm-paper);
     --bs-body-font-family: 'Hind Siliguri', sans-serif;
+    --bs-secondary-color: var(--fm-muted);
+    --bs-border-color: var(--fm-border);
     --bs-link-color: var(--fm-blue);
     --bs-link-color-rgb: 44, 109, 181;
+    --bs-link-hover-color: #235791;
+    --bs-link-hover-color-rgb: 35, 87, 145;
+}
+
+body {
+    background-color: var(--fm-paper);
 }
 
 h1, h2, h3, h4, h5, h6, .navbar-brand {
     font-family: 'Anek Bangla', sans-serif;
 }
 
-/* Bootstrap buttons have their colours built in, so we set them here */
 .btn-primary {
     --bs-btn-bg: var(--fm-green);
     --bs-btn-border-color: var(--fm-green);
@@ -39,16 +43,29 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     --bs-btn-hover-border-color: var(--fm-green-dark);
     --bs-btn-active-bg: var(--fm-green-dark);
     --bs-btn-active-border-color: var(--fm-green-dark);
+    --bs-btn-focus-shadow-rgb: 0, 106, 78;
 }
 
-/* Main call-to-action button: yellow with dark text */
+.btn-outline-primary {
+    --bs-btn-color: var(--fm-green-dark);
+    --bs-btn-border-color: var(--fm-green-dark);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: var(--fm-green-dark);
+    --bs-btn-hover-border-color: var(--fm-green-dark);
+    --bs-btn-active-bg: var(--fm-green-dark);
+    --bs-btn-focus-shadow-rgb: 0, 77, 56;
+}
+
 .btn-warning {
     --bs-btn-color: var(--fm-ink);
     --bs-btn-bg: var(--fm-yellow);
     --bs-btn-border-color: var(--fm-yellow);
     --bs-btn-hover-color: var(--fm-ink);
-    --bs-btn-hover-bg: #d9a404;
-    --bs-btn-hover-border-color: #d9a404;
+    --bs-btn-hover-bg: var(--fm-yellow-hover);
+    --bs-btn-hover-border-color: var(--fm-yellow-hover);
+    --bs-btn-active-color: var(--fm-ink);
+    --bs-btn-active-bg: var(--fm-yellow-hover);
+    --bs-btn-focus-shadow-rgb: 217, 164, 4;
 }
 
 .form-control:focus,
@@ -57,20 +74,34 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     box-shadow: 0 0 0 0.25rem rgba(0, 106, 78, 0.25);
 }
 
-.site-navbar {
+.badge-status-green  { color: #1e7b34; background-color: #e7f6ec; }
+.badge-status-orange { color: #b54708; background-color: #fef0c7; }
+.badge-status-blue   { color: #2c6db5; background-color: #e8f0fe; }
+.badge-status-red    { color: #c0392b; background-color: #fdecea; }
+.badge-status-grey   { color: #5b6763; background-color: #eef1ef; }
+
+.badge-verified {
+    color: #ffffff;
     background-color: var(--fm-green);
 }
 
-.hero {
-    padding: 4rem 1rem;
+.navbar.site-navbar {
+    background-color: var(--fm-green);
+    --bs-navbar-color: rgba(255, 255, 255, 0.85);
 }
 
-.hero-icon {
-    font-size: 4rem;
-    color: var(--fm-green);
+.hero {
+    background-color: var(--fm-green);
+    color: #ffffff;
+    padding: 2.5rem 0;
+}
+
+.hero-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 700;
 }
 
 .site-footer {
-    background-color: var(--fm-ink);
-    color: #d6ddd8;
+    background-color: var(--fm-footer);
+    color: var(--fm-footer-text);
 }
