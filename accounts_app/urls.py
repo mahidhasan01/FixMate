@@ -19,4 +19,5 @@ urlpatterns = [
     path('after-login/', views.after_login, name='after_login'),
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.profile_edit, name='profile_edit'),
+    path('profile/id-verification/', views.id_verification, name='id_verification'),
 ]

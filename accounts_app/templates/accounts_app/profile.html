@@ -32,6 +32,8 @@
                         {% if user.role == 'customer' %}
                             <dt class="col-sm-4">Address</dt>
                             <dd class="col-sm-8">{{ role_profile.address|default:'-' }}</dd>
+                            <dt class="col-sm-4">ID check</dt>
+                            <dd class="col-sm-8">{% include 'accounts_app/_id_status_badge.html' with customer=role_profile %}</dd>
                         {% else %}
                             <dt class="col-sm-4">Skill</dt>
                             <dd class="col-sm-8">{{ role_profile.skill }}</dd>
@@ -45,6 +47,9 @@
                     </dl>
 
                     <a href="{% url 'accounts_app:profile_edit' %}" class="btn btn-primary">Edit profile</a>
+                    {% if user.role == 'customer' %}
+                        <a href="{% url 'accounts_app:id_verification' %}" class="btn btn-outline-primary">Verify your ID</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

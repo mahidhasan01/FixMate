@@ -108,3 +108,22 @@ class WorkerProfileForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
         self.fields['availability_status'].widget.attrs['class'] = 'form-select'
+
+
+class CustomerIDForm(forms.ModelForm):
+    class Meta:
+        model = CustomerProfile
+        fields = ['nid_number', 'id_photo']
+        labels = {'nid_number': 'NID number', 'id_photo': 'Photo of your NID card'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+            field.required = True
+
+    def clean_nid_number(self):
+        nid = self.cleaned_data['nid_number']
+        if not nid.isdigit() or len(nid) not in (10, 13, 17):
+            raise forms.ValidationError('NID number must be 10, 13 or 17 digits.')
+        return nid

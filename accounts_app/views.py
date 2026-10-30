@@ -3,8 +3,8 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from .forms import ( CustomerProfileForm, CustomerSignUpForm, UserUpdateForm, WorkerProfileForm,WorkerSignUpForm)
-from .models import User
+from .forms import ( CustomerIDForm, CustomerProfileForm, CustomerSignUpForm, UserUpdateForm, WorkerProfileForm,WorkerSignUpForm)
+from .models import CustomerProfile, User
 
 
 def choose_role(request):
@@ -96,3 +96,27 @@ def profile_edit(request):
 
     context = {'user_form': user_form, 'profile_form': profile_form}
     return render(request, 'accounts_app/profile_edit.html', context)
+
+
+@login_required
+def id_verification(request):
+    if request.user.role != User.CUSTOMER:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    customer = request.user.customer_profile
+    can_submit = customer.verification_status in (CustomerProfile.NOT_SUBMITTED, CustomerProfile.REJECTED)
+
+    if request.method == 'POST' and can_submit:
+        form = CustomerIDForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.verification_status = CustomerProfile.PENDING
+            customer.save()
+            messages.success(request, 'Your ID has been sent. We will check it soon.')
+            return redirect('accounts_app:profile')
+    else:
+        form = CustomerIDForm(instance=customer)
+
+    context = {'customer': customer, 'form': form, 'can_submit': can_submit}
+    return render(request, 'accounts_app/id_verification.html', context)

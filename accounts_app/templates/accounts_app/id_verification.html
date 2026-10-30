@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify your ID - FixMate{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-3">Verify your ID</h1>
+                    <p class="mb-4">Status: {% include 'accounts_app/_id_status_badge.html' %}</p>
+
+                    {% if can_submit %}
+                        {% if customer.verification_status == 'rejected' %}
+                            <div class="alert alert-danger">Your last ID was not accepted. Please send a clear photo again.</div>
+                        {% endif %}
+                        <p class="text-body-secondary">Send your NID number and a clear photo of your NID card. Only FixMate staff can see the photo.</p>
+
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% include 'partials/_form_fields.html' %}
+                            <button type="submit" class="btn btn-primary">Send for checking</button>
+                        </form>
+                    {% elif customer.verification_status == 'pending' %}
+                        <p class="mb-0">We have your ID and will check it soon.</p>
+                    {% else %}
+                        <p class="mb-0">Your ID is verified. You can book services.</p>
+                    {% endif %}
+
+                    <a href="{% url 'accounts_app:profile' %}" class="btn btn-outline-primary mt-4">Back to profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

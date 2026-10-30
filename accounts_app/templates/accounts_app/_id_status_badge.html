@@ -1,0 +1,9 @@
+{% if customer.verification_status == 'approved' %}
+    <span class="badge badge-status-green"><i class="bi bi-check-circle"></i> Approved</span>
+{% elif customer.verification_status == 'pending' %}
+    <span class="badge badge-status-orange"><i class="bi bi-hourglass-split"></i> Pending</span>
+{% elif customer.verification_status == 'rejected' %}
+    <span class="badge badge-status-red"><i class="bi bi-x-circle"></i> Rejected</span>
+{% else %}
+    <span class="badge badge-status-grey"><i class="bi bi-dash-circle"></i> Not submitted</span>
+{% endif %}
