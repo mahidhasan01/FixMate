@@ -23,6 +23,8 @@
                 <span class="navbar-text">
                     <i class="bi bi-person-circle"></i> {{ user.username }}
                 </span>
+            {% else %}
+                <a class="btn btn-warning btn-sm" href="{% url 'accounts_app:choose_role' %}">Sign up</a>
             {% endif %}
         </div>
     </div>

@@ -101,6 +101,11 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     font-weight: 700;
 }
 
+.role-icon {
+    font-size: 3rem;
+    color: var(--fm-green);
+}
+
 .site-footer {
     background-color: var(--fm-footer);
     color: var(--fm-footer-text);
