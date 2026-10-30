@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.db import transaction
 
-from .models import CustomerProfile, User, WorkerProfile
+from .models import CustomerProfile, User, WorkerProfile, WorkerVerification
 
 
 class LoginForm(AuthenticationForm):
@@ -127,3 +127,15 @@ class CustomerIDForm(forms.ModelForm):
         if not nid.isdigit() or len(nid) not in (10, 13, 17):
             raise forms.ValidationError('NID number must be 10, 13 or 17 digits.')
         return nid
+
+
+class WorkerVerificationForm(forms.ModelForm):
+    class Meta:
+        model = WorkerVerification
+        fields = ['document_photo']
+        labels = {'document_photo': 'Photo of your NID or trade certificate'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'

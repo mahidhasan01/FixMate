@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Get verified - FixMate{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-3">Get verified</h1>
+
+                    {% if worker.verified_badge %}
+                        <p><span class="badge badge-verified"><i class="bi bi-shield-check"></i> Verified</span>
+                            You are verified. Customers can see your badge.</p>
+                    {% elif can_submit %}
+                        <p class="text-body-secondary">Send a clear photo of your NID or trade certificate.
+                            Only FixMate staff can see it.</p>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% include 'partials/_form_fields.html' %}
+                            <button type="submit" class="btn btn-primary">Send for checking</button>
+                        </form>
+                    {% else %}
+                        <p>We have your document and will check it soon.</p>
+                    {% endif %}
+
+                    <h2 class="h5 mt-4">Past attempts</h2>
+                    {% if attempts %}
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Sent on</th>
+                                    <th>Status</th>
+                                    <th>Staff comment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for attempt in attempts %}
+                                    <tr>
+                                        <td>{{ attempt.submitted_date|date:'d M Y, h:i A' }}</td>
+                                        <td>
+                                            {% if attempt.verification_status == 'approved' %}
+                                                <span class="badge badge-status-green"><i class="bi bi-check-circle"></i> Approved</span>
+                                            {% elif attempt.verification_status == 'rejected' %}
+                                                <span class="badge badge-status-red"><i class="bi bi-x-circle"></i> Rejected</span>
+                                            {% else %}
+                                                <span class="badge badge-status-orange"><i class="bi bi-hourglass-split"></i> Pending</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ attempt.admin_comment|default:'-' }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p class="text-body-secondary">You have not sent any documents yet.</p>
+                    {% endif %}
+
+                    <a href="{% url 'accounts_app:profile' %}" class="btn btn-outline-primary">Back to profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
