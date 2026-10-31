@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}My bookings - FixMate{% endblock %}
+{% block title %}{% if user.role == 'worker' %}Booking requests{% else %}My bookings{% endif %} - FixMate{% endblock %}
 
 {% block content %}
-    <h1 class="h3 mb-4">My bookings</h1>
+    <h1 class="h3 mb-4">{% if user.role == 'worker' %}Booking requests{% else %}My bookings{% endif %}</h1>
 
     <div class="card">
         <div class="card-body p-4">
@@ -12,7 +12,7 @@
                     <thead>
                         <tr>
                             <th>Service</th>
-                            <th>Worker</th>
+                            <th>{% if user.role == 'worker' %}Customer{% else %}Worker{% endif %}</th>
                             <th>Date</th>
                             <th>Address</th>
                             <th>Status</th>
@@ -22,7 +22,13 @@
                         {% for booking in bookings %}
                             <tr>
                                 <td><a href="{% url 'services_app:listing_detail' booking.service.pk %}">{{ booking.service.title }}</a></td>
-                                <td>{{ booking.worker.user.get_full_name|default:booking.worker.user.username }}</td>
+                                <td>
+                                    {% if user.role == 'worker' %}
+                                        {{ booking.customer.user.get_full_name|default:booking.customer.user.username }}
+                                    {% else %}
+                                        {{ booking.worker.user.get_full_name|default:booking.worker.user.username }}
+                                    {% endif %}
+                                </td>
                                 <td>{{ booking.booking_date|date:'d M Y' }}</td>
                                 <td>{{ booking.location }}</td>
                                 <td>{% include 'booking_app/_booking_status_badge.html' %}</td>
@@ -30,6 +36,8 @@
                         {% endfor %}
                     </tbody>
                 </table>
+            {% elif user.role == 'worker' %}
+                <p class="mb-0">No booking requests yet.</p>
             {% else %}
                 <p class="mb-2">You have no bookings yet.</p>
                 <a href="{% url 'services_app:listing_list' %}" class="btn btn-primary">Find services</a>

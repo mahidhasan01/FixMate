@@ -32,6 +32,7 @@
                             {% endif %}
                             {% if user.role == 'worker' %}
                                 <li><a class="dropdown-item" href="{% url 'services_app:my_listings' %}">My listings</a></li>
+                                <li><a class="dropdown-item" href="{% url 'booking_app:worker_bookings' %}">Booking requests</a></li>
                             {% endif %}
                             {% if user.is_staff %}
                                 <li><a class="dropdown-item" href="{% url 'accounts_app:verification_queue' %}">Verification queue</a></li>

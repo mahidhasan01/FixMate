@@ -15,7 +15,17 @@ def customer_bookings(request):
         return redirect('home')
 
     bookings = request.user.customer_profile.bookings.order_by('-id')
-    return render(request, 'booking_app/customer_bookings.html', {'bookings': bookings})
+    return render(request, 'booking_app/bookings.html', {'bookings': bookings})
+
+
+@login_required
+def worker_bookings(request):
+    if request.user.role != User.WORKER:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    bookings = request.user.worker_profile.bookings.order_by('-id')
+    return render(request, 'booking_app/bookings.html', {'bookings': bookings})
 
 
 @login_required
@@ -48,4 +58,4 @@ def booking_create(request, listing_pk):
         form = BookingForm(initial={'location': customer.address})
 
     context = {'form': form, 'service_listing': service_listing}
-    return render(request, 'booking_app/booking_form.html', context)
+    return render(request, 'booking_app/booking_create.html', context)
