@@ -16,7 +16,7 @@ class ServiceListing(models.Model):
     category = models.ForeignKey(ServiceCategory, on_delete=models.PROTECT, related_name='listings')
     title = models.CharField(max_length=150)
     description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     service_image = models.ImageField(upload_to='service_images/', blank=True)
 
     def __str__(self):
