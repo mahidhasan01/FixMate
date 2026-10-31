@@ -13,6 +13,8 @@ class LoginForm(AuthenticationForm):
 
 
 class SignUpForm(UserCreationForm):
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
     email = forms.EmailField()
     phone = forms.CharField(max_length=20)
 
@@ -67,6 +69,8 @@ class WorkerSignUpForm(SignUpForm):
 
 
 class UserUpdateForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
     email = forms.EmailField()
     phone = forms.CharField(max_length=20)
 
