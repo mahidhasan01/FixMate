@@ -19,7 +19,7 @@ def after_login(request):
     messages.success(request, f'Welcome back, {request.user.username}!')
     if request.user.is_staff:
         return redirect('admin:index')
-    return redirect('home')
+    return redirect('booking_app:dashboard')
 
 
 def customer_signup(request):

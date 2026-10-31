@@ -25,6 +25,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
                             {% if user.role != 'admin' %}
+                                <li><a class="dropdown-item" href="{% url 'booking_app:dashboard' %}">Dashboard</a></li>
                                 <li><a class="dropdown-item" href="{% url 'accounts_app:profile' %}">My profile</a></li>
                             {% endif %}
                             {% if user.role == 'customer' %}

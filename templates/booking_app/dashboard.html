@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FixMate{% endblock %}
+
+{% block content %}
+    <h1 class="h3 mb-4">Hello, {{ user.first_name|default:user.username }}</h1>
+
+    <div class="row g-3 mb-4">
+        <div class="col-4">
+            <div class="card text-center p-3">
+                <div class="fs-3 fw-bold">{{ pending_count }}</div>
+                <div class="text-body-secondary">Pending</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card text-center p-3">
+                <div class="fs-3 fw-bold">{{ accepted_count }}</div>
+                <div class="text-body-secondary">Accepted</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card text-center p-3">
+                <div class="fs-3 fw-bold">{{ completed_count }}</div>
+                <div class="text-body-secondary">Completed</div>
+            </div>
+        </div>
+    </div>
+
+    {% if user.role == 'customer' %}
+        {% if not id_approved %}
+            <div class="alert alert-warning">
+                Your ID is not approved yet, so you can't book.
+                <a href="{% url 'accounts_app:id_verification' %}" class="alert-link">Check your ID status</a>
+            </div>
+        {% endif %}
+
+        <div class="card mb-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Photos waiting for your approval</h2>
+                {% for booking in photos_to_review %}
+                    <p class="mb-2"><a href="{% url 'booking_app:booking_detail' booking.pk %}">{{ booking.service.title }}</a> &middot; {{ booking.booking_date|date:'d M Y' }}</p>
+                {% empty %}
+                    <p class="text-body-secondary mb-0">Nothing to approve.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-4">
+                <h2 class="h5">Upcoming jobs</h2>
+                {% for booking in upcoming %}
+                    <p class="mb-2"><a href="{% url 'booking_app:booking_detail' booking.pk %}">{{ booking.service.title }}</a> &middot; {{ booking.booking_date|date:'d M Y' }}</p>
+                {% empty %}
+                    <p class="text-body-secondary mb-2">No upcoming jobs.</p>
+                    <a href="{% url 'services_app:listing_list' %}" class="btn btn-primary">Find services</a>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        {% if not is_verified %}
+            <div class="alert alert-warning">
+                You are not verified yet, so you can't add listings.
+                <a href="{% url 'accounts_app:worker_verification' %}" class="alert-link">Get verified</a>
+            </div>
+        {% endif %}
+
+        <div class="card mb-4">
+            <div class="card-body p-4">
+                <h2 class="h5">New requests to answer</h2>
+                {% for booking in new_requests %}
+                    <p class="mb-2"><a href="{% url 'booking_app:booking_detail' booking.pk %}">{{ booking.service.title }}</a> &middot; {{ booking.customer.user.get_full_name|default:booking.customer.user.username }} &middot; {{ booking.booking_date|date:'d M Y' }}</p>
+                {% empty %}
+                    <p class="text-body-secondary mb-0">No new requests.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-4">
+                <h2 class="h5">Jobs that need a completion photo</h2>
+                {% for booking in need_photo %}
+                    <p class="mb-2"><a href="{% url 'booking_app:booking_detail' booking.pk %}">{{ booking.service.title }}</a> &middot; {{ booking.booking_date|date:'d M Y' }}</p>
+                {% empty %}
+                    <p class="text-body-secondary mb-0">You're all caught up.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

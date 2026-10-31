@@ -168,3 +168,34 @@ def completion_review(request, pk):
             messages.success(request, 'Photo rejected. The worker can send a new one.')
 
     return redirect('booking_app:booking_detail', pk=booking.pk)
+
+
+@login_required
+def dashboard(request):
+    user = request.user
+    if user.role == User.CUSTOMER:
+        profile = user.customer_profile
+        bookings = profile.bookings
+        context = {
+            'id_approved': profile.verification_status == CustomerProfile.APPROVED,
+            'photos_to_review': bookings.filter(job_verification__verification_status=JobVerification.PENDING),
+            'upcoming': bookings.filter(status=Booking.ACCEPTED).order_by('booking_date'),
+        }
+    elif user.role == User.WORKER:
+        profile = user.worker_profile
+        bookings = profile.bookings
+        context = {
+            'is_verified': profile.verified_badge,
+            'new_requests': bookings.filter(status=Booking.PENDING).order_by('booking_date'),
+            'need_photo': bookings.filter(status=Booking.ACCEPTED).exclude(
+                job_verification__verification_status=JobVerification.PENDING
+            ),
+        }
+    else:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    context['pending_count'] = bookings.filter(status=Booking.PENDING).count()
+    context['accepted_count'] = bookings.filter(status=Booking.ACCEPTED).count()
+    context['completed_count'] = bookings.filter(status=Booking.COMPLETED).count()
+    return render(request, 'booking_app/dashboard.html', context)
