@@ -121,6 +121,11 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     background-color: var(--fm-green-tint);
 }
 
+.listing-detail-img {
+    max-height: 360px;
+    object-fit: cover;
+}
+
 .category-tag {
     color: var(--fm-green-dark);
     background-color: var(--fm-green-tint);

@@ -37,6 +37,11 @@ def listing_list(request):
     return render(request, 'services_app/listing_list.html', context)
 
 
+def listing_detail(request, pk):
+    service_listing = get_object_or_404(ServiceListing, pk=pk)
+    return render(request, 'services_app/listing_detail.html', {'service_listing': service_listing})
+
+
 @login_required
 def my_listings(request):
     if request.user.role != User.WORKER:
