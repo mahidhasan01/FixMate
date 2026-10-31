@@ -27,6 +27,9 @@
                             {% if user.role != 'admin' %}
                                 <li><a class="dropdown-item" href="{% url 'accounts_app:profile' %}">My profile</a></li>
                             {% endif %}
+                            {% if user.role == 'customer' %}
+                                <li><a class="dropdown-item" href="{% url 'booking_app:customer_bookings' %}">My bookings</a></li>
+                            {% endif %}
                             {% if user.role == 'worker' %}
                                 <li><a class="dropdown-item" href="{% url 'services_app:my_listings' %}">My listings</a></li>
                             {% endif %}

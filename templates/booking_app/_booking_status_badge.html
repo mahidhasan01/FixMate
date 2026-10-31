@@ -1,0 +1,9 @@
+{% if booking.status == 'completed' %}
+    <span class="badge badge-status-green"><i class="bi bi-check-circle"></i> Completed</span>
+{% elif booking.status == 'accepted' %}
+    <span class="badge badge-status-blue"><i class="bi bi-hand-thumbs-up"></i> Accepted</span>
+{% elif booking.status == 'pending' %}
+    <span class="badge badge-status-orange"><i class="bi bi-hourglass-split"></i> Pending</span>
+{% else %}
+    <span class="badge badge-status-red"><i class="bi bi-x-circle"></i> {{ booking.get_status_display }}</span>
+{% endif %}
