@@ -6,6 +6,7 @@ from accounts_app.models import CustomerProfile, User
 from services_app.models import ServiceListing
 
 from .forms import BookingForm
+from .models import Booking
 
 
 @login_required
@@ -59,3 +60,15 @@ def booking_create(request, listing_pk):
 
     context = {'form': form, 'service_listing': service_listing}
     return render(request, 'booking_app/booking_create.html', context)
+
+
+@login_required
+def booking_detail(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    is_customer = booking.customer.user == request.user
+    is_worker = booking.worker.user == request.user
+    if not (is_customer or is_worker or request.user.is_staff):
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    return render(request, 'booking_app/booking_detail.html', {'booking': booking})

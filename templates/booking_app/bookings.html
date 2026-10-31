@@ -16,6 +16,7 @@
                             <th>Date</th>
                             <th>Address</th>
                             <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,6 +33,7 @@
                                 <td>{{ booking.booking_date|date:'d M Y' }}</td>
                                 <td>{{ booking.location }}</td>
                                 <td>{% include 'booking_app/_booking_status_badge.html' %}</td>
+                                <td><a href="{% url 'booking_app:booking_detail' booking.pk %}" class="btn btn-outline-primary btn-sm">View</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking - FixMate{% endblock %}
+
+{% block content %}
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h1 class="h3 mb-0">{{ booking.service.title }}</h1>
+                        {% include 'booking_app/_booking_status_badge.html' %}
+                    </div>
+
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Price</dt>
+                        <dd class="col-sm-8 listing-price">৳ {{ booking.service.price }}</dd>
+                        <dt class="col-sm-4">Date</dt>
+                        <dd class="col-sm-8">{{ booking.booking_date|date:'d M Y' }}</dd>
+                        <dt class="col-sm-4">Customer</dt>
+                        <dd class="col-sm-8">{{ booking.customer.user.get_full_name|default:booking.customer.user.username }} &middot; {{ booking.customer.user.phone|default:'-' }}</dd>
+                        <dt class="col-sm-4">Worker</dt>
+                        <dd class="col-sm-8">{{ booking.worker.user.get_full_name|default:booking.worker.user.username }} &middot; {{ booking.worker.user.phone|default:'-' }}</dd>
+                        <dt class="col-sm-4">Address</dt>
+                        <dd class="col-sm-8">{{ booking.location }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card">
+                <iframe src="https://www.google.com/maps?q={{ booking.location|urlencode }}&output=embed"
+                        title="Map of {{ booking.location }}" class="booking-map rounded" loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% if user.role == 'worker' %}{% url 'booking_app:worker_bookings' %}{% else %}{% url 'booking_app:customer_bookings' %}{% endif %}"
+       class="btn btn-outline-primary mt-4">Back to bookings</a>
+{% endblock %}
