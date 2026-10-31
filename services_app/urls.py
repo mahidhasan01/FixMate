@@ -6,4 +6,5 @@ app_name = 'services_app'
 
 urlpatterns = [
     path('listings/mine/', views.my_listings, name='my_listings'),
+    path('listings/new/', views.listing_create, name='listing_create'),
 ]
