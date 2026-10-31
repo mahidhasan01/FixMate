@@ -37,8 +37,7 @@
                         {% endif %}
                     </p>
 
-                    <button type="button" class="btn btn-warning w-100" disabled>Book this service</button>
-                    <p class="text-body-secondary small mt-2 mb-0">Booking opens soon.</p>
+                    <a href="{% url 'booking_app:booking_create' service_listing.pk %}" class="btn btn-warning w-100">Book this service</a>
                 </div>
             </div>
 

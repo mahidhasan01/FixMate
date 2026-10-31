@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Book {{ service_listing.title }} - FixMate{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-1">Book this service</h1>
+                    <p class="mb-4">
+                        {{ service_listing.title }} &middot;
+                        <span class="listing-price">৳ {{ service_listing.price }}</span>
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {% include 'partials/_form_fields.html' %}
+                        <button type="submit" class="btn btn-warning">Send booking request</button>
+                        <a href="{% url 'services_app:listing_detail' service_listing.pk %}" class="btn btn-outline-primary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
