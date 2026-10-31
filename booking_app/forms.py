@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import Booking
+from .models import Booking, JobVerification
 
 
 class BookingForm(forms.ModelForm):
@@ -18,3 +18,13 @@ class BookingForm(forms.ModelForm):
         if booking_date < timezone.localdate():
             raise forms.ValidationError('The date cannot be in the past.')
         return booking_date
+
+
+class CompletionPhotoForm(forms.ModelForm):
+    class Meta:
+        model = JobVerification
+        fields = ['completion_photo']
+        labels = {'completion_photo': 'Photo of the finished job'}
+        widgets = {
+            'completion_photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }

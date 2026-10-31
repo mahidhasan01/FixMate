@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from accounts_app.models import CustomerProfile, User
 from services_app.models import ServiceListing
 
-from .forms import BookingForm
-from .models import Booking
+from .forms import BookingForm, CompletionPhotoForm
+from .models import Booking, JobVerification
 
 
 @login_required
@@ -112,3 +112,38 @@ def booking_cancel(request, pk):
             messages.success(request, 'Booking cancelled.')
 
     return redirect('booking_app:booking_detail', pk=booking.pk)
+
+
+@login_required
+def completion_upload(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if booking.worker.user != request.user:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if booking.status != Booking.ACCEPTED:
+        messages.error(request, 'You can only send a photo for an accepted booking.')
+        return redirect('booking_app:booking_detail', pk=booking.pk)
+
+    job = JobVerification.objects.filter(booking=booking).first()
+    if job and job.verification_status != JobVerification.REJECTED:
+        messages.error(request, 'You have already sent a photo for this booking.')
+        return redirect('booking_app:booking_detail', pk=booking.pk)
+
+    old_photo_name = job.completion_photo.name if job else ''
+
+    if request.method == 'POST':
+        form = CompletionPhotoForm(request.POST, request.FILES, instance=job)
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.booking = booking
+            job.verification_status = JobVerification.PENDING
+            job.save()
+            if old_photo_name:
+                job.completion_photo.storage.delete(old_photo_name)
+            messages.success(request, 'Photo sent. The customer will check it.')
+            return redirect('booking_app:booking_detail', pk=booking.pk)
+    else:
+        form = CompletionPhotoForm()
+
+    return render(request, 'booking_app/completion_form.html', {'form': form, 'booking': booking})

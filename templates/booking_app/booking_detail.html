@@ -33,6 +33,28 @@
                         </form>
                     {% endif %}
 
+                    {% if booking.job_verification %}
+                        <h2 class="h5 mt-4">Completion photo</h2>
+                        <img src="{{ booking.job_verification.completion_photo.url }}" alt="Photo of the finished job" class="completion-photo rounded mb-2">
+                        <p>
+                            {% if booking.job_verification.verification_status == 'approved' %}
+                                <span class="badge badge-status-green"><i class="bi bi-check-circle"></i> Approved</span>
+                            {% elif booking.job_verification.verification_status == 'rejected' %}
+                                <span class="badge badge-status-red"><i class="bi bi-x-circle"></i> Rejected</span>
+                            {% else %}
+                                <span class="badge badge-status-orange"><i class="bi bi-hourglass-split"></i> Waiting for the customer</span>
+                            {% endif %}
+                        </p>
+                    {% endif %}
+
+                    {% if booking.worker.user == user and booking.status == 'accepted' %}
+                        {% if not booking.job_verification or booking.job_verification.verification_status == 'rejected' %}
+                            <a href="{% url 'booking_app:completion_upload' booking.pk %}" class="btn btn-primary mt-3">
+                                <i class="bi bi-camera"></i> Upload completion photo
+                            </a>
+                        {% endif %}
+                    {% endif %}
+
                     {% if booking.customer.user == user and booking.status == 'pending' %}
                         <form method="post" action="{% url 'booking_app:booking_cancel' booking.pk %}" class="mt-4"
                               onsubmit="return confirm('Cancel this booking?');">

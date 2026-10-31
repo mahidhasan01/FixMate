@@ -26,3 +26,32 @@ class Booking(models.Model):
 
     def __str__(self):
         return f'{self.service.title} - {self.customer.user.username} ({self.get_status_display()})'
+
+
+class JobVerification(models.Model):
+    PENDING = 'pending'
+    APPROVED = 'approved'
+    REJECTED = 'rejected'
+    STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (APPROVED, 'Approved'),
+        (REJECTED, 'Rejected'),
+    ]
+
+    booking = models.OneToOneField(Booking, on_delete=models.CASCADE, related_name='job_verification')
+    completion_photo = models.ImageField(upload_to='completion_photos/')
+    verification_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
+    submitted_date = models.DateTimeField(auto_now_add=True)
+
+    def approve_completion(self):
+        self.verification_status = self.APPROVED
+        self.save()
+        self.booking.status = Booking.COMPLETED
+        self.booking.save()
+
+    def reject_completion(self):
+        self.verification_status = self.REJECTED
+        self.save()
+
+    def __str__(self):
+        return f'{self.booking.service.title} - {self.get_verification_status_display()}'
