@@ -114,6 +114,9 @@ def listing_delete(request, pk):
         return redirect('home')
 
     if request.method == 'POST':
+        if service_listing.bookings.exists():
+            messages.error(request, "This listing has bookings and can't be deleted.")
+            return redirect('services_app:my_listings')
         if service_listing.service_image:
             service_listing.service_image.delete(save=False)
         service_listing.delete()
