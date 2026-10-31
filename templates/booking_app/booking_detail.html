@@ -32,6 +32,14 @@
                             <button type="submit" name="action" value="reject" class="btn btn-outline-danger">Reject booking</button>
                         </form>
                     {% endif %}
+
+                    {% if booking.customer.user == user and booking.status == 'pending' %}
+                        <form method="post" action="{% url 'booking_app:booking_cancel' booking.pk %}" class="mt-4"
+                              onsubmit="return confirm('Cancel this booking?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger">Cancel booking</button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
         </div>

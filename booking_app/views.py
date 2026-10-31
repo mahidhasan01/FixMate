@@ -94,3 +94,21 @@ def booking_respond(request, pk):
             messages.success(request, 'Booking rejected.')
 
     return redirect('booking_app:booking_detail', pk=booking.pk)
+
+
+@login_required
+def booking_cancel(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if booking.customer.user != request.user:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        if booking.status != Booking.PENDING:
+            messages.error(request, "This booking can't be cancelled anymore.")
+        else:
+            booking.status = Booking.CANCELLED
+            booking.save()
+            messages.success(request, 'Booking cancelled.')
+
+    return redirect('booking_app:booking_detail', pk=booking.pk)
