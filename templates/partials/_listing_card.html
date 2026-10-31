@@ -11,7 +11,7 @@
         <span class="badge category-tag mb-2">{{ listing.category.name }}</span>
         <h2 class="h5 card-title">{{ listing.title }}</h2>
         <p class="mb-2">
-            {{ listing.worker.user.get_full_name|default:listing.worker.user.username }}
+            <a href="{% url 'services_app:worker_profile' listing.worker.pk %}">{{ listing.worker.user.get_full_name|default:listing.worker.user.username }}</a>
             {% if listing.worker.verified_badge %}
                 <span class="badge badge-verified"><i class="bi bi-shield-check"></i> Verified</span>
             {% endif %}

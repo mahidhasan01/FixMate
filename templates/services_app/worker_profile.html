@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ worker.user.get_full_name|default:worker.user.username }} - FixMate{% endblock %}
+
+{% block content %}
+    <div class="card mb-4">
+        <div class="card-body p-4 d-flex align-items-center gap-3">
+            {% if worker.profile_photo %}
+                <img src="{{ worker.profile_photo.url }}" alt="Photo of {{ worker.user.username }}" class="rounded-circle profile-photo">
+            {% else %}
+                <i class="bi bi-person-circle role-icon"></i>
+            {% endif %}
+            <div>
+                <h1 class="h3 mb-1">
+                    {{ worker.user.get_full_name|default:worker.user.username }}
+                    {% if worker.verified_badge %}
+                        <span class="badge badge-verified fs-6"><i class="bi bi-shield-check"></i> Verified</span>
+                    {% endif %}
+                </h1>
+                <p class="mb-1">{{ worker.skill }} &middot; {{ worker.experience }} years &middot; {{ worker.get_availability_status_display }}</p>
+                {% if worker.average_rating > 0 %}
+                    <span>{{ worker.average_rating }} <i class="bi bi-star-fill text-warning"></i></span>
+                {% else %}
+                    <span class="text-body-secondary">No ratings yet</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <h2 class="h4 mb-3">Services by this worker</h2>
+    <div class="row g-4">
+        {% for listing in listings %}
+            <div class="col-md-6 col-lg-4">
+                {% include 'partials/_listing_card.html' %}
+            </div>
+        {% empty %}
+            <p class="text-body-secondary">No listings yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

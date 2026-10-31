@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from accounts_app.models import User
+from accounts_app.models import User, WorkerProfile
 
 from .forms import ServiceListingForm
 from .models import ServiceCategory, ServiceListing
@@ -40,6 +40,12 @@ def listing_list(request):
 def listing_detail(request, pk):
     service_listing = get_object_or_404(ServiceListing, pk=pk)
     return render(request, 'services_app/listing_detail.html', {'service_listing': service_listing})
+
+
+def worker_profile(request, pk):
+    worker = get_object_or_404(WorkerProfile, pk=pk)
+    listings = worker.listings.order_by('-id')
+    return render(request, 'services_app/worker_profile.html', {'worker': worker, 'listings': listings})
 
 
 @login_required

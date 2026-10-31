@@ -23,7 +23,7 @@
                 <div class="card-body p-4">
                     <h2 class="h5">About the worker</h2>
                     <p class="mb-1 fw-semibold">
-                        {{ service_listing.worker.user.get_full_name|default:service_listing.worker.user.username }}
+                        <a href="{% url 'services_app:worker_profile' service_listing.worker.pk %}">{{ service_listing.worker.user.get_full_name|default:service_listing.worker.user.username }}</a>
                         {% if service_listing.worker.verified_badge %}
                             <span class="badge badge-verified"><i class="bi bi-shield-check"></i> Verified</span>
                         {% endif %}
