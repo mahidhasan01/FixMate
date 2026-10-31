@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from accounts_app.models import CustomerProfile, User
 from services_app.models import ServiceListing
 
-from .forms import BookingForm, CompletionPhotoForm
-from .models import Booking, JobVerification
+from .forms import BookingForm, CompletionPhotoForm, ReviewForm
+from .models import Booking, JobVerification, Review
 
 
 @login_required
@@ -168,6 +168,36 @@ def completion_review(request, pk):
             messages.success(request, 'Photo rejected. The worker can send a new one.')
 
     return redirect('booking_app:booking_detail', pk=booking.pk)
+
+
+@login_required
+def review_create(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if booking.customer.user != request.user:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if booking.status != Booking.COMPLETED:
+        messages.error(request, 'You can review a booking only after it is completed.')
+        return redirect('booking_app:booking_detail', pk=booking.pk)
+    if Review.objects.filter(booking=booking).exists():
+        messages.error(request, 'You have already reviewed this booking.')
+        return redirect('booking_app:booking_detail', pk=booking.pk)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.booking = booking
+            review.customer = booking.customer
+            review.worker = booking.worker
+            review.save()
+            messages.success(request, 'Thanks for your review.')
+            return redirect('booking_app:booking_detail', pk=booking.pk)
+    else:
+        form = ReviewForm()
+
+    return render(request, 'booking_app/review_create.html', {'form': form, 'booking': booking})
 
 
 @login_required

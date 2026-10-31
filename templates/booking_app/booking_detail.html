@@ -63,6 +63,16 @@
                         {% endif %}
                     {% endif %}
 
+                    {% if booking.review %}
+                        <h2 class="h5 mt-4">Review</h2>
+                        <p class="mb-1">{{ booking.review.rating }} <i class="bi bi-star-fill text-warning"></i> &middot; {{ booking.review.created_date|date:'d M Y' }}</p>
+                        <p>{{ booking.review.comment|default:'No comment.' }}</p>
+                    {% elif booking.customer.user == user and booking.status == 'completed' %}
+                        <a href="{% url 'booking_app:review_create' booking.pk %}" class="btn btn-warning mt-4">
+                            <i class="bi bi-star"></i> Write a review
+                        </a>
+                    {% endif %}
+
                     {% if booking.customer.user == user and booking.status == 'pending' %}
                         <form method="post" action="{% url 'booking_app:booking_cancel' booking.pk %}" class="mt-4"
                               onsubmit="return confirm('Cancel this booking?');">

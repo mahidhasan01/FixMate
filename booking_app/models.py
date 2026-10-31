@@ -55,3 +55,31 @@ class JobVerification(models.Model):
 
     def __str__(self):
         return f'{self.booking.service.title} - {self.get_verification_status_display()}'
+
+
+class Review(models.Model):
+    RATING_CHOICES = [
+        (1, '1 - Poor'),
+        (2, '2 - Fair'),
+        (3, '3 - Good'),
+        (4, '4 - Very good'),
+        (5, '5 - Excellent'),
+    ]
+
+    booking = models.OneToOneField(Booking, on_delete=models.CASCADE, related_name='review')
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='reviews')
+    worker = models.ForeignKey(WorkerProfile, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    comment = models.TextField(blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.worker.calculate_average_rating()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        self.worker.calculate_average_rating()
+
+    def __str__(self):
+        return f'{self.customer.user.username} rated {self.worker.user.username} {self.rating}/5'

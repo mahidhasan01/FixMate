@@ -78,6 +78,11 @@ class WorkerProfile(models.Model):
     )
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
 
+    def calculate_average_rating(self):
+        average = self.reviews.aggregate(models.Avg('rating'))['rating__avg']
+        self.average_rating = round(average or 0, 2)
+        self.save()
+
     def __str__(self):
         return f'{self.user.username} - {self.skill}'
 

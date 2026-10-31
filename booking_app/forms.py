@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import Booking, JobVerification
+from .models import Booking, JobVerification, Review
 
 
 class BookingForm(forms.ModelForm):
@@ -27,4 +27,14 @@ class CompletionPhotoForm(forms.ModelForm):
         labels = {'completion_photo': 'Photo of the finished job'}
         widgets = {
             'completion_photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'comment']
+        widgets = {
+            'rating': forms.Select(attrs={'class': 'form-select'}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
