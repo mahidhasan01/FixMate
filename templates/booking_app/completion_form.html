@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-body p-4">
                     <h1 class="h3 mb-1">Send completion photo</h1>
-                    <p class="text-body-secondary mb-4">{{ booking.service.title }} &middot; {{ booking.booking_date|date:'d M Y' }}</p>
+                    <p class="text-body-secondary mb-4">{{ booking.service.title }} - {{ booking.booking_date|date:'d M Y' }}</p>
 
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}

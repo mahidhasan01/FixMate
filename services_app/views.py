@@ -45,7 +45,9 @@ def listing_detail(request, pk):
 def worker_profile(request, pk):
     worker = get_object_or_404(WorkerProfile, pk=pk)
     listings = worker.listings.order_by('-id')
-    return render(request, 'services_app/worker_profile.html', {'worker': worker, 'listings': listings})
+    reviews = worker.reviews.order_by('-created_date')
+    context = {'worker': worker, 'listings': listings, 'reviews': reviews}
+    return render(request, 'services_app/worker_profile.html', context)
 
 
 @login_required

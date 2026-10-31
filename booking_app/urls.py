@@ -14,5 +14,7 @@ urlpatterns = [
     path('<int:pk>/completion/', views.completion_upload, name='completion_upload'),
     path('<int:pk>/completion/review/', views.completion_review, name='completion_review'),
     path('<int:pk>/review/new/', views.review_create, name='review_create'),
+    path('reviews/<int:pk>/update/', views.review_update, name='review_update'),
+    path('reviews/<int:pk>/delete/', views.review_delete, name='review_delete'),
     path('new/<int:listing_pk>/', views.booking_create, name='booking_create'),
 ]

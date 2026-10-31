@@ -18,9 +18,9 @@
                         <dt class="col-sm-4">Date</dt>
                         <dd class="col-sm-8">{{ booking.booking_date|date:'d M Y' }}</dd>
                         <dt class="col-sm-4">Customer</dt>
-                        <dd class="col-sm-8">{{ booking.customer.user.get_full_name|default:booking.customer.user.username }} &middot; {{ booking.customer.user.phone|default:'-' }}</dd>
+                        <dd class="col-sm-8">{{ booking.customer.user.get_full_name|default:booking.customer.user.username }} - {{ booking.customer.user.phone|default:'-' }}</dd>
                         <dt class="col-sm-4">Worker</dt>
-                        <dd class="col-sm-8">{{ booking.worker.user.get_full_name|default:booking.worker.user.username }} &middot; {{ booking.worker.user.phone|default:'-' }}</dd>
+                        <dd class="col-sm-8">{{ booking.worker.user.get_full_name|default:booking.worker.user.username }} - {{ booking.worker.user.phone|default:'-' }}</dd>
                         <dt class="col-sm-4">Address</dt>
                         <dd class="col-sm-8">{{ booking.location }}</dd>
                     </dl>
@@ -65,8 +65,18 @@
 
                     {% if booking.review %}
                         <h2 class="h5 mt-4">Review</h2>
-                        <p class="mb-1">{{ booking.review.rating }} <i class="bi bi-star-fill text-warning"></i> &middot; {{ booking.review.created_date|date:'d M Y' }}</p>
+                        <p class="mb-1">{{ booking.review.rating }} <i class="bi bi-star-fill text-warning"></i> - {{ booking.review.created_date|date:'d M Y' }}</p>
                         <p>{{ booking.review.comment|default:'No comment.' }}</p>
+                        {% if booking.customer.user == user %}
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'booking_app:review_update' booking.review.pk %}" class="btn btn-outline-primary btn-sm">Edit review</a>
+                                <form method="post" action="{% url 'booking_app:review_delete' booking.review.pk %}"
+                                      onsubmit="return confirm('Delete your review?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete review</button>
+                                </form>
+                            </div>
+                        {% endif %}
                     {% elif booking.customer.user == user and booking.status == 'completed' %}
                         <a href="{% url 'booking_app:review_create' booking.pk %}" class="btn btn-warning mt-4">
                             <i class="bi bi-star"></i> Write a review

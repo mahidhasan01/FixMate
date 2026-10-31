@@ -9,7 +9,7 @@
                 <div class="card-body p-4">
                     <h1 class="h3 mb-1">Write a review</h1>
                     <p class="text-body-secondary mb-4">
-                        {{ booking.service.title }} &middot; {{ booking.worker.user.get_full_name|default:booking.worker.user.username }}
+                        {{ booking.service.title }} - {{ booking.worker.user.get_full_name|default:booking.worker.user.username }}
                     </p>
 
                     <form method="post">

@@ -201,6 +201,39 @@ def review_create(request, pk):
 
 
 @login_required
+def review_update(request, pk):
+    review = get_object_or_404(Review, pk=pk)
+    if review.customer.user != request.user:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Review updated.')
+            return redirect('booking_app:booking_detail', pk=review.booking.pk)
+    else:
+        form = ReviewForm(instance=review)
+
+    return render(request, 'booking_app/review_update.html', {'form': form, 'review': review})
+
+
+@login_required
+def review_delete(request, pk):
+    review = get_object_or_404(Review, pk=pk)
+    if review.customer.user != request.user:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        review.delete()
+        messages.success(request, 'Review deleted.')
+
+    return redirect('booking_app:booking_detail', pk=review.booking.pk)
+
+
+@login_required
 def dashboard(request):
     user = request.user
     if user.role == User.CUSTOMER:

@@ -28,7 +28,7 @@
                             <span class="badge badge-verified"><i class="bi bi-shield-check"></i> Verified</span>
                         {% endif %}
                     </p>
-                    <p class="mb-1">{{ service_listing.worker.skill }} &middot; {{ service_listing.worker.experience }} years</p>
+                    <p class="mb-1">{{ service_listing.worker.skill }} - {{ service_listing.worker.experience }} years</p>
                     <p>
                         {% if service_listing.worker.average_rating > 0 %}
                             {{ service_listing.worker.average_rating }} <i class="bi bi-star-fill text-warning"></i>

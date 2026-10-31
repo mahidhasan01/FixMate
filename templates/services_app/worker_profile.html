@@ -17,7 +17,7 @@
                         <span class="badge badge-verified fs-6"><i class="bi bi-shield-check"></i> Verified</span>
                     {% endif %}
                 </h1>
-                <p class="mb-1">{{ worker.skill }} &middot; {{ worker.experience }} years &middot; {{ worker.get_availability_status_display }}</p>
+                <p class="mb-1">{{ worker.skill }} - {{ worker.experience }} years - {{ worker.get_availability_status_display }}</p>
                 {% if worker.average_rating > 0 %}
                     <span>{{ worker.average_rating }} <i class="bi bi-star-fill text-warning"></i></span>
                 {% else %}
@@ -36,5 +36,23 @@
         {% empty %}
             <p class="text-body-secondary">No listings yet.</p>
         {% endfor %}
+    </div>
+
+    <h2 class="h4 mt-5 mb-3">Rating history</h2>
+    <div class="card">
+        <div class="card-body p-4">
+            {% for review in reviews %}
+                <div class="{% if not forloop.last %}border-bottom pb-3 mb-3{% endif %}">
+                    <p class="mb-1">
+                        <strong>{{ review.rating }} <i class="bi bi-star-fill text-warning"></i></strong>
+                        - {{ review.customer.user.get_full_name|default:review.customer.user.username }}
+                        - <span class="text-body-secondary">{{ review.created_date|date:'d M Y' }}</span>
+                    </p>
+                    <p class="mb-0">{{ review.comment|default:'No comment.' }}</p>
+                </div>
+            {% empty %}
+                <p class="text-body-secondary mb-0">No reviews yet.</p>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
