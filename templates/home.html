@@ -26,3 +26,105 @@
         </div>
     </section>
 {% endblock %}
+
+{% block content %}
+    {% if categories %}
+        <section class="mb-5">
+            <h2 class="h4 mb-3">Browse by category</h2>
+            <div class="row g-3">
+                {% for cat in categories %}
+                    <div class="col-6 col-md-3">
+                        <a href="{% url 'services_app:listing_list' %}?category={{ cat.pk }}" class="category-tile d-block text-center p-3 rounded">
+                            <i class="bi bi-tools fs-3"></i>
+                            <div class="fw-semibold mt-1">{{ cat.name }}</div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="mb-5">
+        <h2 class="h4 mb-3">How it works</h2>
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <span class="step-circle">1</span>
+                <h3 class="h5 mt-2">Search</h3>
+                <p class="text-body-secondary">Find the service you need near you.</p>
+            </div>
+            <div class="col-md-4">
+                <span class="step-circle">2</span>
+                <h3 class="h5 mt-2">Book</h3>
+                <p class="text-body-secondary">Pick a verified worker and a date.</p>
+            </div>
+            <div class="col-md-4">
+                <span class="step-circle">3</span>
+                <h3 class="h5 mt-2">Get it fixed</h3>
+                <p class="text-body-secondary">Approve the photo proof, then rate the worker.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="trust-band rounded p-4 mb-5">
+        <h2 class="h4 mb-3 text-center">Why trust FixMate</h2>
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <i class="bi bi-shield-check fs-2 text-primary"></i>
+                <p class="fw-semibold mb-1">Verified workers</p>
+                <p class="text-body-secondary mb-0">Staff check every worker's documents.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-camera fs-2 text-primary"></i>
+                <p class="fw-semibold mb-1">Photo-proof completion</p>
+                <p class="text-body-secondary mb-0">Workers upload a photo when the job is done.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-star fs-2 text-primary"></i>
+                <p class="fw-semibold mb-1">Public ratings</p>
+                <p class="text-body-secondary mb-0">See what other customers said before you book.</p>
+            </div>
+        </div>
+    </section>
+
+    {% if top_workers %}
+        <section class="mb-5">
+            <h2 class="h4 mb-3">Top-rated workers</h2>
+            <div class="row g-3">
+                {% for worker in top_workers %}
+                    <div class="col-6 col-md-3">
+                        <a href="{% url 'services_app:worker_profile' worker.pk %}" class="card h-100 text-center text-decoration-none text-body p-3">
+                            {% if worker.profile_photo %}
+                                <img src="{{ worker.profile_photo.url }}" alt="Photo of {{ worker.user.username }}" class="rounded-circle profile-photo mx-auto">
+                            {% else %}
+                                <i class="bi bi-person-circle role-icon"></i>
+                            {% endif %}
+                            <div class="fw-semibold mt-2">{{ worker.user.get_full_name|default:worker.user.username }}</div>
+                            <div class="small text-body-secondary">{{ worker.skill }}</div>
+                            <div class="mt-1"><span class="badge badge-verified"><i class="bi bi-shield-check"></i> Verified</span></div>
+                            <div class="small mt-1">
+                                {% if worker.average_rating > 0 %}
+                                    {{ worker.average_rating }} <i class="bi bi-star-fill text-warning"></i>
+                                {% else %}
+                                    No ratings yet
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    {% if latest_listings %}
+        <section>
+            <h2 class="h4 mb-3">Latest listings</h2>
+            <div class="row g-4">
+                {% for listing in latest_listings %}
+                    <div class="col-md-6 col-lg-4">
+                        {% include 'partials/_listing_card.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

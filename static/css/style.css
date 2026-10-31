@@ -106,6 +106,35 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     color: var(--fm-green);
 }
 
+.category-tile {
+    color: var(--fm-green-dark);
+    background-color: var(--fm-green-tint);
+    text-decoration: none;
+}
+
+.category-tile:hover {
+    color: #ffffff;
+    background-color: var(--fm-green);
+}
+
+.step-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--fm-yellow);
+    color: var(--fm-ink);
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.trust-band {
+    background-color: #ffffff;
+    border: 1px solid var(--fm-border);
+}
+
 .listing-card {
     transition: transform 0.15s, box-shadow 0.15s;
 }
