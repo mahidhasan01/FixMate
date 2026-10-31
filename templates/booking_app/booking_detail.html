@@ -24,6 +24,14 @@
                         <dt class="col-sm-4">Address</dt>
                         <dd class="col-sm-8">{{ booking.location }}</dd>
                     </dl>
+
+                    {% if booking.worker.user == user and booking.status == 'pending' %}
+                        <form method="post" action="{% url 'booking_app:booking_respond' booking.pk %}" class="d-flex gap-2 mt-4">
+                            {% csrf_token %}
+                            <button type="submit" name="action" value="accept" class="btn btn-primary">Accept booking</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-outline-danger">Reject booking</button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
         </div>

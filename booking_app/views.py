@@ -72,3 +72,25 @@ def booking_detail(request, pk):
         return redirect('home')
 
     return render(request, 'booking_app/booking_detail.html', {'booking': booking})
+
+
+@login_required
+def booking_respond(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if booking.worker.user != request.user:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        if booking.status != Booking.PENDING:
+            messages.error(request, 'This booking has already been answered.')
+        elif request.POST.get('action') == 'accept':
+            booking.status = Booking.ACCEPTED
+            booking.save()
+            messages.success(request, 'Booking accepted.')
+        else:
+            booking.status = Booking.REJECTED
+            booking.save()
+            messages.success(request, 'Booking rejected.')
+
+    return redirect('booking_app:booking_detail', pk=booking.pk)
