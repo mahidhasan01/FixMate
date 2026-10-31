@@ -8,7 +8,7 @@
             <h1 class="hero-title" lang="bn">ভাই, ভালো একজন মিস্ত্রি চেনেন?</h1>
             <p class="lead mb-3">Book verified electricians, plumbers and technicians near you.</p>
 
-            <form method="get" role="search" class="tw-max-w-xl tw-mx-auto">
+            <form method="get" action="{% url 'services_app:listing_list' %}" role="search" class="tw-max-w-xl tw-mx-auto">
                 <div class="input-group input-group-lg">
                     <input type="search" name="q" class="form-control"
                            placeholder="What needs fixing?" aria-label="Search services">

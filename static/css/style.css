@@ -106,6 +106,31 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     color: var(--fm-green);
 }
 
+.listing-card {
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.listing-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(24, 33, 28, 0.12);
+}
+
+.listing-card-img {
+    height: 180px;
+    object-fit: cover;
+    background-color: var(--fm-green-tint);
+}
+
+.category-tag {
+    color: var(--fm-green-dark);
+    background-color: var(--fm-green-tint);
+}
+
+.listing-price {
+    color: var(--fm-green);
+    font-weight: 700;
+}
+
 .listing-thumb {
     width: 64px;
     height: 48px;

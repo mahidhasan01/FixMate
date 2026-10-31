@@ -1,0 +1,28 @@
+<div class="card h-100 listing-card">
+    {% if listing.service_image %}
+        <img src="{{ listing.service_image.url }}" alt="{{ listing.title }}" class="card-img-top listing-card-img">
+    {% else %}
+        <div class="listing-card-img d-flex align-items-center justify-content-center">
+            <i class="bi bi-tools fs-1 text-body-secondary"></i>
+        </div>
+    {% endif %}
+
+    <div class="card-body">
+        <span class="badge category-tag mb-2">{{ listing.category.name }}</span>
+        <h2 class="h5 card-title">{{ listing.title }}</h2>
+        <p class="mb-2">
+            {{ listing.worker.user.get_full_name|default:listing.worker.user.username }}
+            {% if listing.worker.verified_badge %}
+                <span class="badge badge-verified"><i class="bi bi-shield-check"></i> Verified</span>
+            {% endif %}
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="listing-price">৳ {{ listing.price }}</span>
+            {% if listing.worker.average_rating > 0 %}
+                <span>{{ listing.worker.average_rating }} <i class="bi bi-star-fill text-warning"></i></span>
+            {% else %}
+                <span class="text-body-secondary small">No ratings yet</span>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,11 +1,40 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts_app.models import User
 
 from .forms import ServiceListingForm
-from .models import ServiceListing
+from .models import ServiceCategory, ServiceListing
+
+
+def listing_list(request):
+    listings = ServiceListing.objects.select_related('worker__user', 'category').order_by('-id')
+
+    q = request.GET.get('q', '')
+    category = request.GET.get('category', '')
+    min_price = request.GET.get('min_price', '')
+    max_price = request.GET.get('max_price', '')
+
+    if q:
+        listings = listings.filter(Q(title__icontains=q) | Q(description__icontains=q))
+    if category.isdigit():
+        listings = listings.filter(category_id=category)
+    if min_price.isdigit():
+        listings = listings.filter(price__gte=min_price)
+    if max_price.isdigit():
+        listings = listings.filter(price__lte=max_price)
+
+    context = {
+        'listings': listings,
+        'categories': ServiceCategory.objects.order_by('name'),
+        'q': q,
+        'category': category,
+        'min_price': min_price,
+        'max_price': max_price,
+    }
+    return render(request, 'services_app/listing_list.html', context)
 
 
 @login_required
