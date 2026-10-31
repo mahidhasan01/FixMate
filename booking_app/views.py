@@ -147,3 +147,24 @@ def completion_upload(request, pk):
         form = CompletionPhotoForm()
 
     return render(request, 'booking_app/completion_form.html', {'form': form, 'booking': booking})
+
+
+@login_required
+def completion_review(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if booking.customer.user != request.user:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        job = JobVerification.objects.filter(booking=booking).first()
+        if not job or job.verification_status != JobVerification.PENDING:
+            messages.error(request, 'There is no photo waiting for your review.')
+        elif request.POST.get('action') == 'approve':
+            job.approve_completion()
+            messages.success(request, 'Job approved. The booking is now completed.')
+        else:
+            job.reject_completion()
+            messages.success(request, 'Photo rejected. The worker can send a new one.')
+
+    return redirect('booking_app:booking_detail', pk=booking.pk)

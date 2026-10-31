@@ -11,5 +11,6 @@ urlpatterns = [
     path('<int:pk>/respond/', views.booking_respond, name='booking_respond'),
     path('<int:pk>/cancel/', views.booking_cancel, name='booking_cancel'),
     path('<int:pk>/completion/', views.completion_upload, name='completion_upload'),
+    path('<int:pk>/completion/review/', views.completion_review, name='completion_review'),
     path('new/<int:listing_pk>/', views.booking_create, name='booking_create'),
 ]

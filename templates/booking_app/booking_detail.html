@@ -45,6 +45,14 @@
                                 <span class="badge badge-status-orange"><i class="bi bi-hourglass-split"></i> Waiting for the customer</span>
                             {% endif %}
                         </p>
+
+                        {% if booking.customer.user == user and booking.job_verification.verification_status == 'pending' %}
+                            <form method="post" action="{% url 'booking_app:completion_review' booking.pk %}" class="d-flex gap-2">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="approve" class="btn btn-primary">Approve photo</button>
+                                <button type="submit" name="action" value="reject" class="btn btn-outline-danger">Reject photo</button>
+                            </form>
+                        {% endif %}
                     {% endif %}
 
                     {% if booking.worker.user == user and booking.status == 'accepted' %}
