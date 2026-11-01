@@ -84,6 +84,13 @@
                             </p>
                         {% endif %}
 
+                        {% if booking.worker.user == user and payment.payment_method == 'cash' and payment.payment_status == 'pending' %}
+                            <form method="post" action="{% url 'payment_app:cash_received' payment.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Cash received</button>
+                            </form>
+                        {% endif %}
+
                         {% if booking.customer.user == user and booking.status == 'accepted' %}
                             {% if not payment or payment.payment_status == 'failed' %}
                                 <a href="{% url 'payment_app:checkout' booking.pk %}" class="btn btn-warning mt-3">

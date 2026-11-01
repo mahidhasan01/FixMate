@@ -57,3 +57,51 @@ def checkout(request, booking_pk):
                 'bkash_total': amount_to_send(price, Payment.BKASH),
     }
     return render(request, 'payment_app/checkout.html', context)
+
+
+@login_required
+def payment_queue(request):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    payments = Payment.objects.filter(payment_status=Payment.PENDING).exclude(
+        payment_method=Payment.CASH
+    ).order_by('payment_date')
+    return render(request, 'payment_app/payment_queue.html', {'payments': payments})
+
+
+@login_required
+def payment_review(request, pk):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        payment = get_object_or_404(Payment, pk=pk)
+        if request.POST.get('action') == 'approve':
+            payment.payment_status = Payment.PAID
+            messages.success(request, f'{payment.transaction_id} marked as paid.')
+        else:
+            payment.payment_status = Payment.FAILED
+            payment.admin_comment = request.POST.get('comment', '')
+            messages.success(request, f'{payment.transaction_id} rejected.')
+        payment.save()
+
+    return redirect('payment_app:payment_queue')
+
+
+@login_required
+def cash_received(request, pk):
+    payment = get_object_or_404(Payment, pk=pk)
+    if payment.booking.worker.user != request.user:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        if payment.payment_method == Payment.CASH and payment.payment_status == Payment.PENDING:
+            payment.payment_status = Payment.PAID
+            payment.save()
+            messages.success(request, 'Cash payment marked as received.')
+
+    return redirect('booking_app:booking_detail', pk=payment.booking.pk)
