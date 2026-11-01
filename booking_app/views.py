@@ -6,7 +6,7 @@ from accounts_app.models import CustomerProfile, User
 from services_app.models import ServiceListing
 
 from .forms import BookingForm, CompletionPhotoForm, ReviewForm
-from .models import Booking, JobVerification, Review
+from .models import Booking, FraudAnomalyFlag, JobVerification, Review
 from . import fraud
 
 
@@ -242,6 +242,37 @@ def review_delete(request, pk):
         messages.success(request, 'Review deleted.')
 
     return redirect('booking_app:booking_detail', pk=review.booking.pk)
+
+
+@login_required
+def flag_list(request):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    open_flags = FraudAnomalyFlag.objects.filter(flag_status=FraudAnomalyFlag.OPEN).order_by('-risk_score', '-created_date')
+    closed_flags = FraudAnomalyFlag.objects.exclude(flag_status=FraudAnomalyFlag.OPEN).order_by('-created_date')[:20]
+    context = {'open_flags': open_flags, 'closed_flags': closed_flags}
+    return render(request, 'booking_app/flag_list.html', context)
+
+
+@login_required
+def flag_update(request, pk):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        flag = get_object_or_404(FraudAnomalyFlag, pk=pk)
+        if request.POST.get('action') == 'resolve':
+            flag.flag_status = FraudAnomalyFlag.RESOLVED
+            messages.success(request, 'Flag marked as resolved.')
+        else:
+            flag.flag_status = FraudAnomalyFlag.DISMISSED
+            messages.success(request, 'Flag dismissed.')
+        flag.save()
+
+    return redirect('booking_app:flag_list')
 
 
 @login_required

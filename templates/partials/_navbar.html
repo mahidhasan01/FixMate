@@ -40,6 +40,7 @@
                             {% if user.is_staff %}
                                 <li><a class="dropdown-item" href="{% url 'accounts_app:verification_queue' %}">Verification queue</a></li>
                                 <li><a class="dropdown-item" href="{% url 'payment_app:payment_queue' %}">Payment queue</a></li>
+                                <li><a class="dropdown-item" href="{% url 'booking_app:flag_list' %}">Fraud flags</a></li>
                                 <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin panel</a></li>
                                 <li><hr class="dropdown-divider"></li>
                             {% endif %}
