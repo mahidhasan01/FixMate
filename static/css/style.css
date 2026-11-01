@@ -193,3 +193,11 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     background-color: var(--fm-footer);
     color: var(--fm-footer-text);
 }
+
+@media print {
+    .site-navbar,
+    .site-footer,
+    .btn {
+        display: none !important;
+    }
+}

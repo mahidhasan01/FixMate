@@ -2,8 +2,10 @@ from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
+from accounts_app.models import User
 from booking_app.models import Booking
 
 from .forms import PaymentForm
@@ -105,3 +107,36 @@ def cash_received(request, pk):
             messages.success(request, 'Cash payment marked as received.')
 
     return redirect('booking_app:booking_detail', pk=payment.booking.pk)
+
+
+@login_required
+def receipt(request, pk):
+    payment = get_object_or_404(Payment, pk=pk)
+    booking = payment.booking
+    is_customer = booking.customer.user == request.user
+    is_worker = booking.worker.user == request.user
+    if not (is_customer or is_worker or request.user.is_staff):
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    if payment.payment_status not in (Payment.PAID, Payment.REFUNDED):
+        messages.error(request, 'A receipt is ready only after the payment is confirmed.')
+        return redirect('booking_app:booking_detail', pk=booking.pk)
+
+    return render(request, 'payment_app/receipt.html', {'payment': payment})
+
+
+@login_required
+def payment_history(request):
+    user = request.user
+    if user.role == User.CUSTOMER:
+        payments = Payment.objects.filter(booking__customer=user.customer_profile)
+    elif user.role == User.WORKER:
+        payments = Payment.objects.filter(booking__worker=user.worker_profile)
+    else:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    total = payments.filter(payment_status=Payment.PAID).aggregate(Sum('amount'))['amount__sum'] or 0
+    payments = payments.order_by('-payment_date')
+    return render(request, 'payment_app/payment_history.html', {'payments': payments, 'total': total})

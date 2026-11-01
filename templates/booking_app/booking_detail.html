@@ -73,6 +73,7 @@
                             <p>
                                 {% if payment.payment_status == 'paid' %}
                                     <span class="badge badge-status-green"><i class="bi bi-check-circle"></i> Paid</span>
+                                    <a href="{% url 'payment_app:receipt' payment.pk %}" class="ms-2">View receipt</a>
                                 {% elif payment.payment_status == 'failed' %}
                                     <span class="badge badge-status-red"><i class="bi bi-x-circle"></i> Failed</span>
                                     {{ payment.admin_comment }}

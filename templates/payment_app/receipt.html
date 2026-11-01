@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Receipt - FixMate{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h1 class="h3 mb-1"><i class="bi bi-tools"></i> FixMate receipt</h1>
+                            <p class="text-body-secondary mb-0">Receipt #{{ payment.pk }} - {{ payment.payment_date|date:'d M Y, h:i A' }}</p>
+                        </div>
+                        {% if payment.payment_status == 'refunded' %}
+                            <span class="badge badge-status-blue"><i class="bi bi-arrow-counterclockwise"></i> Refunded</span>
+                        {% else %}
+                            <span class="badge badge-status-green"><i class="bi bi-check-circle"></i> Paid</span>
+                        {% endif %}
+                    </div>
+
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Service</dt>
+                        <dd class="col-sm-8">{{ payment.booking.service.title }}</dd>
+                        <dt class="col-sm-4">Job date</dt>
+                        <dd class="col-sm-8">{{ payment.booking.booking_date|date:'d M Y' }}</dd>
+                        <dt class="col-sm-4">Customer</dt>
+                        <dd class="col-sm-8">{{ payment.booking.customer.user.get_full_name|default:payment.booking.customer.user.username }}</dd>
+                        <dt class="col-sm-4">Worker</dt>
+                        <dd class="col-sm-8">{{ payment.booking.worker.user.get_full_name|default:payment.booking.worker.user.username }}</dd>
+                        <dt class="col-sm-4">Method</dt>
+                        <dd class="col-sm-8">{{ payment.get_payment_method_display }}</dd>
+                        <dt class="col-sm-4">TrxID</dt>
+                        <dd class="col-sm-8">{{ payment.transaction_id|default:'Cash' }}</dd>
+                        <dt class="col-sm-4">Amount</dt>
+                        <dd class="col-sm-8 listing-price">৳ {{ payment.amount }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+                <button type="button" class="btn btn-primary" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
+                <a href="{% url 'booking_app:booking_detail' payment.booking.pk %}" class="btn btn-outline-primary">Back to booking</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
