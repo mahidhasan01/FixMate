@@ -74,6 +74,13 @@
                                 {% if payment.payment_status == 'paid' %}
                                     <span class="badge badge-status-green"><i class="bi bi-check-circle"></i> Paid</span>
                                     <a href="{% url 'payment_app:receipt' payment.pk %}" class="ms-2">View receipt</a>
+                                    {% if user.is_staff %}
+                                        <form method="post" action="{% url 'payment_app:payment_refund' payment.pk %}" class="mt-2"
+                                              onsubmit="return confirm('Mark this payment as refunded?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">Mark as refunded</button>
+                                        </form>
+                                    {% endif %}
                                 {% elif payment.payment_status == 'failed' %}
                                     <span class="badge badge-status-red"><i class="bi bi-x-circle"></i> Failed</span>
                                     {{ payment.admin_comment }}

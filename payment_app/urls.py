@@ -10,5 +10,6 @@ urlpatterns = [
     path('<int:pk>/review/', views.payment_review, name='payment_review'),
     path('<int:pk>/cash_received/', views.cash_received, name='cash_received'),
     path('<int:pk>/receipt/', views.receipt, name='receipt'),
+    path('<int:pk>/refund/', views.payment_refund, name='payment_refund'),
     path('history/', views.payment_history, name='payment_history'),
 ]

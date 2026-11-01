@@ -127,6 +127,24 @@ def receipt(request, pk):
 
 
 @login_required
+def payment_refund(request, pk):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    payment = get_object_or_404(Payment, pk=pk)
+    if request.method == 'POST':
+        if payment.payment_status == Payment.PAID:
+            payment.payment_status = Payment.REFUNDED
+            payment.save()
+            messages.success(request, 'Payment marked as refunded.')
+        else:
+            messages.error(request, 'Only a paid payment can be refunded.')
+
+    return redirect('booking_app:booking_detail', pk=payment.booking.pk)
+
+
+@login_required
 def payment_history(request):
     user = request.user
     if user.role == User.CUSTOMER:
