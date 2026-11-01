@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from accounts_app.models import CustomerProfile, WorkerProfile
 from services_app.models import ServiceListing
@@ -83,3 +84,36 @@ class Review(models.Model):
 
     def __str__(self):
         return f'{self.customer.user.username} rated {self.worker.user.username} {self.rating}/5'
+
+
+class FraudAnomalyFlag(models.Model):
+    DISPUTED_COMPLETION = 'disputed_completion'
+    EXCESSIVE_CANCELLATION = 'excessive_cancellation'
+    LOW_RATING_PATTERN = 'low_rating_pattern'
+    POSSIBLE_FAKE_REVIEWS = 'possible_fake_reviews'
+    TYPE_CHOICES = [
+        (DISPUTED_COMPLETION, 'Disputed completion'),
+        (EXCESSIVE_CANCELLATION, 'Too many cancellations'),
+        (LOW_RATING_PATTERN, 'Many one-star reviews'),
+        (POSSIBLE_FAKE_REVIEWS, 'Possible fake reviews'),
+    ]
+
+    OPEN = 'open'
+    RESOLVED = 'resolved'
+    DISMISSED = 'dismissed'
+    STATUS_CHOICES = [
+        (OPEN, 'Open'),
+        (RESOLVED, 'Resolved'),
+        (DISMISSED, 'Dismissed'),
+    ]
+
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True, related_name='flags')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='flags')
+    anomaly_type = models.CharField(max_length=30, choices=TYPE_CHOICES)
+    risk_score = models.PositiveSmallIntegerField()
+    description = models.TextField()
+    flag_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=OPEN)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.get_anomaly_type_display()} ({self.risk_score})'
