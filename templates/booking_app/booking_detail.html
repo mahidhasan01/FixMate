@@ -47,6 +47,9 @@
                         </p>
 
                         {% if booking.customer.user == user and booking.job_verification.verification_status == 'pending' %}
+                            {% if not booking.payments.exists %}
+                                <p class="text-body-secondary small mb-2">Pay first, then approve the photo.</p>
+                            {% endif %}
                             <form method="post" action="{% url 'booking_app:completion_review' booking.pk %}" class="d-flex gap-2">
                                 {% csrf_token %}
                                 <button type="submit" name="action" value="approve" class="btn btn-primary">Approve photo</button>

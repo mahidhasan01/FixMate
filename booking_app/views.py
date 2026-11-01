@@ -7,6 +7,7 @@ from services_app.models import ServiceListing
 
 from .forms import BookingForm, CompletionPhotoForm, ReviewForm
 from .models import Booking, JobVerification, Review
+from . import fraud
 
 
 @login_required
@@ -109,6 +110,7 @@ def booking_cancel(request, pk):
         else:
             booking.status = Booking.CANCELLED
             booking.save()
+            fraud.check_cancels(booking.customer)
             messages.success(request, 'Booking cancelled.')
 
     return redirect('booking_app:booking_detail', pk=booking.pk)
@@ -161,10 +163,15 @@ def completion_review(request, pk):
         if not job or job.verification_status != JobVerification.PENDING:
             messages.error(request, 'There is no photo waiting for your review.')
         elif request.POST.get('action') == 'approve':
-            job.approve_completion()
-            messages.success(request, 'Job approved. The booking is now completed.')
+            has_payment = booking.payments.filter(payment_status__in=['pending', 'paid']).exists()
+            if has_payment:
+                job.approve_completion()
+                messages.success(request, 'Job approved. The booking is now completed.')
+            else:
+                messages.error(request, 'Please pay for this booking before approving the job.')
         else:
             job.reject_completion()
+            fraud.check_rejected_photo(booking)
             messages.success(request, 'Photo rejected. The worker can send a new one.')
 
     return redirect('booking_app:booking_detail', pk=booking.pk)
@@ -192,6 +199,8 @@ def review_create(request, pk):
             review.customer = booking.customer
             review.worker = booking.worker
             review.save()
+            fraud.check_bad_ratings(review.worker)
+            fraud.check_fake_reviews(review)
             messages.success(request, 'Thanks for your review.')
             return redirect('booking_app:booking_detail', pk=booking.pk)
     else:
@@ -211,6 +220,8 @@ def review_update(request, pk):
         form = ReviewForm(request.POST, instance=review)
         if form.is_valid():
             form.save()
+            fraud.check_bad_ratings(review.worker)
+            fraud.check_fake_reviews(review)
             messages.success(request, 'Review updated.')
             return redirect('booking_app:booking_detail', pk=review.booking.pk)
     else:
