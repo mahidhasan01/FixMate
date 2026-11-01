@@ -63,6 +63,36 @@
                         {% endif %}
                     {% endif %}
 
+                    {% with payment=booking.payments.last %}
+                        {% if payment %}
+                            <h2 class="h5 mt-4">Payment</h2>
+                            <p class="mb-1">
+                                {{ payment.get_payment_method_display }} - ৳ {{ payment.amount }}
+                                {% if payment.transaction_id %}- TrxID {{ payment.transaction_id }}{% endif %}
+                            </p>
+                            <p>
+                                {% if payment.payment_status == 'paid' %}
+                                    <span class="badge badge-status-green"><i class="bi bi-check-circle"></i> Paid</span>
+                                {% elif payment.payment_status == 'failed' %}
+                                    <span class="badge badge-status-red"><i class="bi bi-x-circle"></i> Failed</span>
+                                    {{ payment.admin_comment }}
+                                {% elif payment.payment_status == 'refunded' %}
+                                    <span class="badge badge-status-blue"><i class="bi bi-arrow-counterclockwise"></i> Refunded</span>
+                                {% else %}
+                                    <span class="badge badge-status-orange"><i class="bi bi-hourglass-split"></i> Pending check</span>
+                                {% endif %}
+                            </p>
+                        {% endif %}
+
+                        {% if booking.customer.user == user and booking.status == 'accepted' %}
+                            {% if not payment or payment.payment_status == 'failed' %}
+                                <a href="{% url 'payment_app:checkout' booking.pk %}" class="btn btn-warning mt-3">
+                                    <i class="bi bi-wallet2"></i> Pay now
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
+
                     {% if booking.review %}
                         <h2 class="h5 mt-4">Review</h2>
                         <p class="mb-1">{{ booking.review.rating }} <i class="bi bi-star-fill text-warning"></i> - {{ booking.review.created_date|date:'d M Y' }}</p>
