@@ -10,15 +10,19 @@ University of Asia Pacific.
 ## What it does
 
 - Customers and workers sign up with separate accounts
-- Workers get a verified badge after an admin checks their documents
-- Customers verify their identity with their NID before booking
+- Workers get a verified badge after staff check their documents
+- Customers verify their identity with their NID, and only approved customers can book
 - Workers post service listings with prices and photos
 - Customers search listings by category, price or keyword
-- Bookings go from pending to accepted to completed
+- Workers accept or reject bookings, and customers can cancel while a booking is pending
 - Workers upload a photo when a job is done, and the customer confirms it
 - Customers rate the worker after the job, and the ratings show on the worker's profile
-- Payments are recorded for each booking, with refunds for cancelled ones
-- Simple rules flag suspicious activity, like repeated cancellations or payment mismatches
+- Customers pay by bKash, Nagad or Rocket (staff check the TrxID) or in cash, and get a printable receipt
+- Staff can mark a paid payment as refunded, for example after a disputed job
+- Simple rules flag suspicious activity with a risk score: a rejected job photo, 3+ cancellations,
+  3+ one-star reviews or possible fake 5-star reviews within 30 days
+- Customers and workers get their own dashboard, and staff get an overview with the verification
+  queue, payment queue and fraud flags
 
 ## Apps
 
@@ -26,16 +30,16 @@ University of Asia Pacific.
 | --- | --- |
 | accounts_app | Users, customer and worker profiles, ID and worker verification |
 | services_app | Service categories and worker listings |
-| booking_app | Bookings, reviews, job completion photos, fraud flags |
-| payment_app | Payments and refunds |
+| booking_app | Bookings, reviews, job completion photos, fraud flags, dashboards |
+| payment_app | Payments, receipts, refunds and the staff overview |
 
 ## Running it locally
 
 You need Python 3.12 or newer.
 
 ```
-git clone <repo-url>
-cd fixmate
+git clone https://github.com/mahidhasan01/FixMate.git
+cd FixMate
 python -m venv venv
 venv\Scripts\activate          (on Mac/Linux: source venv/bin/activate)
 pip install -r requirements.txt
