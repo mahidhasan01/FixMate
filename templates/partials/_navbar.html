@@ -38,6 +38,7 @@
                                 <li><a class="dropdown-item" href="{% url 'payment_app:payment_history' %}">Earnings</a></li>
                             {% endif %}
                             {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="{% url 'payment_app:admin_overview' %}">Overview</a></li>
                                 <li><a class="dropdown-item" href="{% url 'accounts_app:verification_queue' %}">Verification queue</a></li>
                                 <li><a class="dropdown-item" href="{% url 'payment_app:payment_queue' %}">Payment queue</a></li>
                                 <li><a class="dropdown-item" href="{% url 'booking_app:flag_list' %}">Fraud flags</a></li>

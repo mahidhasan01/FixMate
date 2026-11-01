@@ -12,4 +12,5 @@ urlpatterns = [
     path('<int:pk>/receipt/', views.receipt, name='receipt'),
     path('<int:pk>/refund/', views.payment_refund, name='payment_refund'),
     path('history/', views.payment_history, name='payment_history'),
+    path('staff/overview/', views.admin_overview, name='admin_overview'),
 ]

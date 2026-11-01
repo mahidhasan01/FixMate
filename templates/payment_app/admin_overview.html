@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Overview - FixMate{% endblock %}
+
+{% block content %}
+    <h1 class="h3 mb-4">Overview</h1>
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a href="{% url 'accounts_app:verification_queue' %}" class="btn btn-outline-primary">
+            Verification queue ({{ ids_waiting|add:documents_waiting }})
+        </a>
+        <a href="{% url 'payment_app:payment_queue' %}" class="btn btn-outline-primary">
+            Payment queue ({{ payments_to_check }})
+        </a>
+        <a href="{% url 'booking_app:flag_list' %}" class="btn btn-outline-danger">
+            Fraud flags ({{ open_flag_count }})
+        </a>
+    </div>
+
+    <h2 class="h5">Users</h2>
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ customer_count }}</div><div class="text-body-secondary">Customers</div></div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ worker_count }}</div><div class="text-body-secondary">Workers</div></div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ verified_count }}</div><div class="text-body-secondary">Verified workers</div></div>
+        </div>
+    </div>
+
+    <h2 class="h5">Bookings</h2>
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ pending_bookings }}</div><div class="text-body-secondary">Pending</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ accepted_bookings }}</div><div class="text-body-secondary">Accepted</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ completed_bookings }}</div><div class="text-body-secondary">Completed</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ cancelled_bookings }}</div><div class="text-body-secondary">Cancelled</div></div>
+        </div>
+    </div>
+
+    <h2 class="h5">Payments</h2>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold listing-price">৳ {{ total_paid|floatformat:2 }}</div><div class="text-body-secondary">Total paid</div></div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ payments_to_check }}</div><div class="text-body-secondary">Waiting for a check</div></div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card text-center p-3"><div class="fs-3 fw-bold">{{ refunded_count }}</div><div class="text-body-secondary">Refunded</div></div>
+        </div>
+    </div>
+
+    <h2 class="h5">Highest-risk open flags</h2>
+    <div class="card">
+        <div class="card-body p-4">
+            {% for flag in top_flags %}
+                <p class="mb-2">
+                    <span class="badge {% if flag.risk_score >= 40 %}badge-status-red{% elif flag.risk_score >= 35 %}badge-status-orange{% else %}badge-status-grey{% endif %}">{{ flag.risk_score }}</span>
+                    {{ flag.get_anomaly_type_display }} - {{ flag.user.username }}
+                </p>
+            {% empty %}
+                <p class="text-body-secondary mb-0">No open flags.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
-from accounts_app.models import User
-from booking_app.models import Booking
+from accounts_app.models import CustomerProfile, User, WorkerProfile, WorkerVerification
+from booking_app.models import Booking, FraudAnomalyFlag
 
 from .forms import PaymentForm
 from .models import Payment
@@ -158,3 +158,31 @@ def payment_history(request):
     total = payments.filter(payment_status=Payment.PAID).aggregate(Sum('amount'))['amount__sum'] or 0
     payments = payments.order_by('-payment_date')
     return render(request, 'payment_app/payment_history.html', {'payments': payments, 'total': total})
+
+
+@login_required
+def admin_overview(request):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have access to that page.")
+        return redirect('home')
+
+    total_paid = Payment.objects.filter(payment_status=Payment.PAID).aggregate(Sum('amount'))['amount__sum'] or 0
+    open_flags = FraudAnomalyFlag.objects.filter(flag_status=FraudAnomalyFlag.OPEN)
+
+    context = {
+        'customer_count': User.objects.filter(role=User.CUSTOMER).count(),
+        'worker_count': User.objects.filter(role=User.WORKER).count(),
+        'verified_count': WorkerProfile.objects.filter(verified_badge=True).count(),
+        'pending_bookings': Booking.objects.filter(status=Booking.PENDING).count(),
+        'accepted_bookings': Booking.objects.filter(status=Booking.ACCEPTED).count(),
+        'completed_bookings': Booking.objects.filter(status=Booking.COMPLETED).count(),
+        'cancelled_bookings': Booking.objects.filter(status=Booking.CANCELLED).count(),
+        'total_paid': total_paid,
+        'payments_to_check': Payment.objects.filter(payment_status=Payment.PENDING).exclude(payment_method=Payment.CASH).count(),
+        'refunded_count': Payment.objects.filter(payment_status=Payment.REFUNDED).count(),
+        'ids_waiting': CustomerProfile.objects.filter(verification_status=CustomerProfile.PENDING).count(),
+        'documents_waiting': WorkerVerification.objects.filter(verification_status=WorkerVerification.PENDING).count(),
+        'open_flag_count': open_flags.count(),
+        'top_flags': open_flags.order_by('-risk_score', '-created_date')[:5],
+    }
+    return render(request, 'payment_app/admin_overview.html', context)
