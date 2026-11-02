@@ -45,8 +45,6 @@ venv\Scripts\activate          (on Mac/Linux: source venv/bin/activate)
 pip install -r requirements.txt
 ```
 
-Copy `.env.example` to `.env` and put any long random string in `SECRET_KEY`.
-
 ```
 python manage.py migrate
 python manage.py createsuperuser
